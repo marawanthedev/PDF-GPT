@@ -2,7 +2,6 @@ import Link from "next/link";
 import { MaxWidthWrapper } from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
 import { ArrowRight } from "lucide-react";
-
 import {
   getKindeServerSession,
   RegisterLink,
