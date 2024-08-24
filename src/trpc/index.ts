@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { procedure, router } from './trpc';
+import { publicProcedure, router, privateProcedure } from './trpc';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 
 export const appRouter = router({
-    authCallBack: procedure.query(async () => {
+    authCallBack: publicProcedure.query(async () => {
         const { getUser } = getKindeServerSession()
         const user = getUser()
         if (!user || !user.id || !user.email) {
@@ -31,7 +31,18 @@ export const appRouter = router({
         }
 
         return { success: true }
+    }),
+    getUserFiles: privateProcedure.query(async ({ ctx }) => {
+        const { userId } = ctx
+
+        return await db.file.findMany(({
+            where: {
+                userId: userId
+            }
+        }))
+
     })
+
 });
 
 // export type definition of API
