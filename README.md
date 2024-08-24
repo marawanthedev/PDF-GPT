@@ -10,3 +10,6 @@ User uploading a long article/report and wants to extract answers for specific q
 - Typescript
 - Stripe
 - Vercel
+- Neon.tech
+- React query
+- kinde
