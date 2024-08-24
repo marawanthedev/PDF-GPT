@@ -2,12 +2,18 @@ import Link from "next/link";
 import { MaxWidthWrapper } from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+
 import {
+  getKindeServerSession,
   RegisterLink,
   LoginLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+  LogoutLink,
+} from "@kinde-oss/kinde-auth-nextjs/server";
 
-export const Navbar = () => {
+export const Navbar = async () => {
+  const { isAuthenticated } = getKindeServerSession();
+  const isLoggedIn = await isAuthenticated();
+
   return (
     <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
@@ -28,26 +34,38 @@ export const Navbar = () => {
               >
                 Pricing
               </Link>
-              <LoginLink
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "sm",
-                })}
-                postLoginRedirectURL="/"
-              >
-                {" "}
-                Sign in{" "}
-              </LoginLink>
 
-              <RegisterLink
-                className={buttonVariants({
-                  size: "sm",
-                })}
-                postLoginRedirectURL="/"
-              >
-                {" "}
-                Get Started <ArrowRight className="h-5 w-5 ml-1.5" />{" "}
-              </RegisterLink>
+              {!isLoggedIn && (
+                <>
+                  {" "}
+                  <LoginLink
+                    className={buttonVariants({
+                      variant: "ghost",
+                      size: "sm",
+                    })}
+                  >
+                    {" "}
+                    Sign in{" "}
+                  </LoginLink>
+                  <RegisterLink
+                    className={buttonVariants({
+                      size: "sm",
+                    })}
+                  >
+                    {" "}
+                    Get Started <ArrowRight className="h-5 w-5 ml-1.5" />{" "}
+                  </RegisterLink>
+                </>
+              )}
+              {isLoggedIn && (
+                <LogoutLink
+                  className={buttonVariants({
+                    size: "sm",
+                  })}
+                >
+                  Logout
+                </LogoutLink>
+              )}
             </>
           </div>
         </div>
