@@ -18,6 +18,7 @@ enum DashboardStates {
 export const Dashboard = () => {
   const [state, setState] = useState(DashboardStates.LOADING);
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
+  const { mutate: deleteFile } = trpc.deleteUserFile.useMutation();
 
   useEffect(() => {
     if (isLoading) {
@@ -80,7 +81,14 @@ export const Dashboard = () => {
                     <MessageSquare className="w-4 h-4" />
                     mocked
                   </div>
-                  <Button size='sm' variant='destructive' className='w-full'>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="w-full"
+                    onClick={() => {
+                      deleteFile({ id: file.id });
+                    }}
+                  >
                     <Trash className="w-4 h-4" />
                   </Button>
                 </div>
