@@ -9,15 +9,10 @@ const Page = () => {
   const origin = searchParams?.get("origin");
   trpc.authCallBack.useQuery(undefined, {
     onSuccess: ({ success }) => {
-      if (success) {
-        // user is synced
-        router.push(origin ? `/${origin}` : "/dashboard");
-      }
+      if (success) router.push(origin ? `/${origin}` : "/dashboard");
     },
     onError: (err) => {
-      if (err.data?.code === "UNAUTHORIZED") {
-        router.push("/");
-      }
+      if (err.data?.code === "UNAUTHORIZED") router.push("/");
     },
   });
 

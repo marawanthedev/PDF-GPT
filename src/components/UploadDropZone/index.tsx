@@ -1,9 +1,9 @@
 import { Cloud, File, Loader2 } from "lucide-react";
 import { useState } from "react";
 import DropZone from "react-dropzone";
-import { Progress } from "./ui/progress";
+import { Progress } from "../ui/progress";
 import { useUploadThing } from "@/lib/uploadthing";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 import { db } from "@/db";
@@ -15,7 +15,16 @@ export const UploadDropZone = () => {
   const { startUpload } = useUploadThing("pdfUploader");
   const { toast } = useToast();
   const { mutate: startPolling } = trpc.getFile.useMutation({
-    onSuccess: (file) => {
+    onSuccess: async (file) => {
+      await db.file.update({
+        data: {
+          uploadStatus: "SUCCESS",
+        },
+        where: {
+          id: file.id,
+          userId: file.userId,
+        },
+      });
       router.push(`/dashboard/${file.id}`);
     },
     retry: true,

@@ -21,7 +21,6 @@ const isAuth = t.middleware(async (opts) => {
     })
 })
 
-// Base router and procedure helpers
 export const router = t.router;
 export const publicProcedure = t.procedure;
 export const privateProcedure = t.procedure.use(isAuth)
