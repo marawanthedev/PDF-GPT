@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Button } from "./ui/button";
+import { env } from "process";
 
 enum DashboardStates {
   "NO_FILES",
@@ -49,6 +50,7 @@ export const Dashboard = () => {
       setState(DashboardStates.NO_FILES);
     }
   }, [files]);
+
 
   const NoFilesState = () => {
     return (
