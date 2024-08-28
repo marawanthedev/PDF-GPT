@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Loader2, SearchIcon } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  SearchIcon,
+  RotateCw,
+} from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -8,7 +14,7 @@ import { useToast } from "../ui/use-toast";
 import { useResizeDetector } from "react-resize-detector";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +27,8 @@ import {
 } from "../ui/dropdown-menu";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
+import { PdfRotateOptions, PdfZoomOptions } from "@/constants";
+import { PdfFullScreen } from "../PdfFullScreen/PdfFullScreen";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -34,6 +42,7 @@ export const PdfRenderer = ({ url }: IPdfRenderer) => {
   const [numPages, setNumPages] = useState<number | undefined>(undefined);
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
+  const [rotate, setRotate] = useState<number>(0);
 
   const CustomPageValidator = z.object({
     page: z
@@ -76,6 +85,20 @@ export const PdfRenderer = ({ url }: IPdfRenderer) => {
   const handlePageSubmit = ({ page }: TCustomPageValidator) => {
     setCurrPage(Number(page));
     setValue("page", page);
+  };
+
+  useEffect(() => {
+    setValue("page", String(currPage));
+  }, [currPage]);
+
+  const handleRotate = () => {
+    const rotatationIncrement = 90;
+
+    if (rotate + rotatationIncrement === 360) {
+      setRotate(0);
+    } else {
+      setRotate((prev) => prev + rotatationIncrement);
+    }
   };
 
   return (
@@ -125,29 +148,27 @@ export const PdfRenderer = ({ url }: IPdfRenderer) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem
-                onSelect={() => {
-                  setScale(1);
-                }}
-              >
-                100%
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => {
-                  setScale(1.5);
-                }}
-              >
-                150%
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => {
-                  setScale(2);
-                }}
-              >
-                200%
-              </DropdownMenuItem>
+              {PdfZoomOptions.map((PdfZoomOption) => {
+                return (
+                  <DropdownMenuItem
+                    onSelect={() => setScale(PdfZoomOption.value)}
+                  >
+                    {PdfZoomOption.label}
+                  </DropdownMenuItem>
+                );
+              })}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <Button
+            aria-label="rotate 90degrees"
+            variant="ghost"
+            className="gap-1.5"
+            onClick={handleRotate}
+          >
+            <RotateCw className="h-4 w-4" />
+          </Button>
+          <PdfFullScreen url={url} />
         </div>
       </div>
       {/* topbar*/}
@@ -181,6 +202,7 @@ export const PdfRenderer = ({ url }: IPdfRenderer) => {
                 width={width ? width : 1}
                 pageNumber={currPage}
                 scale={scale}
+                rotate={rotate}
               />
             </Document>
           </div>
