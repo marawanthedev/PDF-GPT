@@ -37,7 +37,7 @@ export const PdfFullScreen = ({ url }: IPdfFullScreen) => {
       </DialogTrigger>
 
       <DialogContent className="max-w-7xl w-full">
-        <SimpleBar autoHide={false} className="max-h-[calc(100vh    -10rem)] mt-6">
+        <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)] mt-6">
           <div
             className="flex flex-col justify-center items-center flex-1"
             ref={ref}
