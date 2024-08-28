@@ -43,6 +43,8 @@ export const PdfRenderer = ({ url }: IPdfRenderer) => {
   const [currPage, setCurrPage] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
   const [rotate, setRotate] = useState<number>(0);
+  const [renderedScale, setIsRenderedScale] = useState<number | null>(null);
+  const isLoading = renderedScale !== scale;
 
   const CustomPageValidator = z.object({
     page: z
@@ -198,11 +200,31 @@ export const PdfRenderer = ({ url }: IPdfRenderer) => {
               file={url}
               className="max-h-full "
             >
+              {isLoading && renderedScale ? (
+                <Page
+                  key={`@` + renderedScale}
+                  width={width ? width : 1}
+                  pageNumber={currPage}
+                  scale={scale}
+                  rotate={rotate}
+                />
+              ) : null}
+
               <Page
+                key={"@" + scale}
+                className={cn(isLoading ? "hidden" : "")}
                 width={width ? width : 1}
                 pageNumber={currPage}
                 scale={scale}
                 rotate={rotate}
+                loading={
+                  <div>
+                    <Loader2 className="my-24 h-6 w-6 animate-spin" />
+                  </div>
+                }
+                onRenderSuccess={() => {
+                  setIsRenderedScale(scale);
+                }}
               />
             </Document>
           </div>
