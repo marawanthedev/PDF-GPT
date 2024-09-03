@@ -1,5 +1,5 @@
-import { ChatWrapper } from "@/components/ChatWrapper";
-import { PdfRenderer } from "@/components/PdfRenderer";
+import { ChatWrapper } from "@/components/Chat/ChatWrapper";
+import { PdfRenderer } from "@/components/Pdf/PdfRenderer";
 import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound, redirect } from "next/navigation";
@@ -44,7 +44,7 @@ const Page = async ({ params }: IPageProps) => {
         {/* leftside */}
         {/* rightside */}
         <div className="shrink-0 flex-[0.75] border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0">
-          <ChatWrapper>my chat</ChatWrapper>
+          <ChatWrapper fileId={file.id}>my chat</ChatWrapper>
         </div>
         {/* rightside */}
 

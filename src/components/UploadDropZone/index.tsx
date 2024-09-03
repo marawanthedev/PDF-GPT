@@ -16,15 +16,6 @@ export const UploadDropZone = () => {
   const { toast } = useToast();
   const { mutate: startPolling } = trpc.getFile.useMutation({
     onSuccess: async (file) => {
-      await db.file.update({
-        data: {
-          uploadStatus: "SUCCESS",
-        },
-        where: {
-          id: file.id,
-          userId: file.userId,
-        },
-      });
       router.push(`/dashboard/${file.id}`);
     },
     retry: true,
