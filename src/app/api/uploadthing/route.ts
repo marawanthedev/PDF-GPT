@@ -11,5 +11,3 @@ export const { GET, POST } = createNextRouteHandler({
         uploadthingSecret: env.UPLOADTHING_SECRET
     }
 });
-
-console.log('env.UPLOADTHING_APP_ID:', env.UPLOADTHING_APP_ID)

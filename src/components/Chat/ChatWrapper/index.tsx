@@ -32,24 +32,23 @@ export const ChatWrapper = (props: IPropsWithChildren) => {
     }
   );
 
-  if (isLoading) {
-    return <LoadingState />;
-  }
+  // if (isLoading) {
+  //   return <LoadingState />;
+  // }
 
-  if (data?.status === "PROCCESSING") {
-    return <ProcessingState />;
-  }
+  // if (data?.status === "PROCCESSING") {
+  //   return <ProcessingState />;
+  // }
 
-  if (data?.status === "FAILED") {
-    return <FaileState />;
-  }
+  // if (data?.status === "FAILED") {
+  //   return <FaileState />;
+  // }
 
   return (
     <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
-      <div className="flex-1  justify-between flex flex-col mb-28">
+      <div className="h-[300px] justify-between flex flex-col mb-28">
         <Messages />
       </div>
-
       <ChatInput />
     </div>
   );
