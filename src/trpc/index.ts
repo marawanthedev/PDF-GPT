@@ -3,6 +3,8 @@ import { publicProcedure, router, privateProcedure } from './trpc';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
+import { pc } from '@/lib/pinecon';
+import { DeleteOneOptions } from '@pinecone-database/pinecone';
 
 export const appRouter = router({
     authCallBack: publicProcedure.query(async () => {
@@ -57,14 +59,28 @@ export const appRouter = router({
             throw new TRPCError({ code: "NOT_FOUND" })
         }
 
-        await db.file.delete({
-            where: {
-                id,
-                userId
-            }
-        })
+        // delete from pinecone vector db
+        try {
 
-        return file;
+            const index = pc.Index('pdf-gpt')
+
+            // deleting all data within a namespace deletes the name space as well
+            await index.namespace(id).deleteAll()
+
+            await db.file.delete({
+                where: {
+                    id,
+                    userId
+                }
+            })
+
+            return file;
+
+        }
+        catch (e) {
+            console.log('error:', e)
+        }
+
     }),
     getFile: privateProcedure.input(z.object({ key: z.string() })).mutation(async ({ ctx, input }) => {
         const { userId } = ctx;
