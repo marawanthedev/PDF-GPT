@@ -83,7 +83,7 @@ export const ourFileRouter = {
                 }));
 
 
-                const indexName = 'pdf-gpt';
+                const indexName = process.env.PINECONE_INDEX_NAME!;
 
                 const existingIndex = await pc.Index(indexName);
                 if (!existingIndex) {
